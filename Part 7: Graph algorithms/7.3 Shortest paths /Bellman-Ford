@@ -1,0 +1,65 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+bool BellmanFord(const vector<tuple<int, int, int>>& edgeList, vector<int> &dist) {
+    for (int i = 1; i <= dist.size(); i++) {
+        for (auto e: edgeList) {
+            int a, b, w;
+            tie(a, b, w) = e;
+            dist[b] = min(dist[b], dist[a] + w);
+        }
+    }
+    // detecting negative cycles
+    vector<int> checkDist = dist;
+    for (auto e: edgeList) {
+        int a, b, w;
+        tie(a, b, w) = e;
+        checkDist[b] = min(checkDist[b], checkDist[a] + w);
+    }
+    if (dist != checkDist) return true;
+    return false;
+}
+int main() {
+    tuple<int, int, int> edge;
+    vector<tuple<int, int, int>> edgeList;
+    vector<int> dist;
+    // graph is represented as a set of edges, denoted as tuples
+    int n;
+    cout << "Enter the amount of vertices: ";
+    cin >> n;
+    dist.resize(n+1, 0);
+    int w, b, adjAmount;
+    for (int a = 1; a <= n; a++) {
+        cout << "node " << a << " " << endl;
+        cout << "amount of adjacent nodes: ";
+        cin >> adjAmount;
+        cout << "Input adjacent nodes and the weights of the edges " << endl;
+        for (int i = 0; i < adjAmount; i++) {
+            cin >> b >> w;
+            if (b > n) { cout << "no such node"; return 0; }
+            edge = make_tuple(a, b, w);
+            edgeList.push_back(edge);
+        }
+    }
+
+    for(auto &el: dist) {
+        el = 100000; // make sure that this number is bigger than the biggest edge weight in the graph
+    }
+
+    int x;
+    cout << "Enter the starting node: ";
+    cin >> x;
+    dist[x] = 0;
+
+    if (BellmanFord(edgeList, dist)) {
+        cout << "that graph contains negative cycles, so Bellman-Ford algorithm cannot be implemented";
+    }
+    else {
+        cout << "The shortest path from node " << x << " to all other nodes is: " << endl;
+        for (int i = 1; i < dist.size(); i++) {
+            cout << dist[i] << " ";
+        }
+    }
+
+    return 0;
+}
