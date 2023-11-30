@@ -1,0 +1,24 @@
+#include<bits/stdc++.h>
+using namespace std;
+vector<int> Set = {1, 2, 3};
+
+void search(int k, vector<int> subset) {
+    if (k == Set.size()) {
+        if(subset.size()==0){cout << 0; return;}
+        for(int i = 0; i < subset.size(); i++) cout << subset[i] << " ";
+        cout << endl;
+    } else {
+        // include k in the subset
+        subset.push_back(Set[k]);
+        search(k+1, subset);
+        subset.pop_back();
+        // don’t include k in the subset
+        search(k+1, subset);
+    }
+}
+int main()
+{
+    vector<int> subset;
+    search(0, subset);
+    return 0;
+}
