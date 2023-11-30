@@ -1,0 +1,25 @@
+#include<bits/stdc++.h>
+using namespace std;
+vector<int> Set = {1, 2, 3};
+bool chosen[3];
+void search(vector<int> permutation) {
+    if (permutation.size() == 3) {
+        for(int i = 0; i < 3; i++) cout << permutation[i] << " ";
+        cout << endl;
+    } else {
+        for(int i = 0; i < 3; i++) {
+            if(chosen[i])continue;
+            chosen[i] = true;
+            permutation.push_back(Set[i]);
+            search(permutation);
+            chosen[i] = false;
+            permutation.pop_back();
+        }
+    }
+}
+int main()
+{
+    vector<int> permutation;
+    search(permutation);
+    return 0;
+}
