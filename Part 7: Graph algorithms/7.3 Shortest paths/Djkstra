@@ -1,0 +1,61 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+// returns a vector of distances
+vector<int> Djkstra(vector<vector<pair<int, int>>> adj, int startNode, int n) {
+    priority_queue<pair<int, int>> q;
+    vector<bool> processed(adj.size()+1, false);
+    vector<int> distance(n+1, 1000000); // second argument needs to be bigger than any edge weight in your graph
+
+    distance[startNode] = 0;
+    q.push({0, startNode});
+
+    while (!q.empty()) {
+        int a = q.top().second; q.pop();
+        if (processed[a]) continue;
+        processed[a] = true;
+        for (auto u: adj[a]) {
+            int b = u.first, w = u.second;
+            if (distance[a] + w < distance[b]) {
+                distance[b] = distance[a] + w;
+                q.push({-1*distance[b], b});
+            }
+        }
+    }
+    return distance;
+}
+
+
+int main()
+{
+    int n;
+    cout << "Enter the amount of nodes: ";
+    cin >> n;
+    vector<pair<int, int>> v;
+    vector<vector<pair<int, int>>> adj(n+1, v);
+    cout << "Enter b w: b - adjacent node to a, w: the weight of an edge from a to b, -1 -1 when finished " << endl;
+    pair<int, int> p;
+    int b, w;
+    for (int a = 1; a <= n; a++) {
+        cout << "node " << a << endl;
+        cin >> b >> w;
+        while (b != -1 && w != -1) {
+            if (w < 0) { cout << "Djkstra does not support negative edges"; return 0; }
+            p.first = b;
+            p.second = w;
+            adj[a].push_back(p);
+            cin >> b >> w;
+        }
+    }
+
+    priority_queue<pair<int, int>> q;
+    vector<bool> processed;
+
+    vector<int> dist = Djkstra(adj, 1, n);
+
+    for (int i = 1; i <= n; i++) {
+        cout << dist[i] << " ";
+    }
+
+    return 0;
+}
